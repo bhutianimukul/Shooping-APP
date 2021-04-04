@@ -1,0 +1,32 @@
+// for gridview builder new file because of provider
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/Providers/products_provider.dart';
+import 'package:shop/Widgets/product_item.dart';
+
+
+class ProductsGrid extends StatelessWidget {
+ 
+
+  @override
+  Widget build(BuildContext context) {
+
+    final productsData=Provider.of<Products>(context);
+    final  loadedProducts=productsData.items;
+    return GridView.builder(
+      padding: const EdgeInsets.all(10),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: MediaQuery.of(context).size.width /
+              (MediaQuery.of(context).size.height / 2),
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20),
+      itemBuilder: (context, index) => ChangeNotifierProvider(
+        
+        create: (_) => loadedProducts[index],
+        child: ProductItem(),
+      ),
+      itemCount: loadedProducts.length,
+    );
+  }
+}
