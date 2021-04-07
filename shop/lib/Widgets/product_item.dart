@@ -9,9 +9,8 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providerData = Provider.of<Cart>(context, listen: false);
-    final product = Provider.of<Product>(context, listen: false);
-   return Consumer <Product>(
-      builder: (context, value, Widget child) {
+    final product = Provider.of<Product>(context);
+
         return ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: GridTile(
@@ -24,16 +23,16 @@ class ProductItem extends StatelessWidget {
                 },
               ),
               leading: IconButton(
-                icon: Icon(value.isFavorite == false
+                icon: Icon(product.isFavorite == false
                     ? Icons.favorite_outline_outlined
                     : Icons.favorite),
                 onPressed: () {
-                  value.toggleFavorite();
+                  product.toggleFavorite();
                 },
               ),
               backgroundColor: Colors.white60,
               title: Text(
-                value.title,
+                product.title,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.body1,
               ),
@@ -41,13 +40,12 @@ class ProductItem extends StatelessWidget {
             child: InkWell(
                 onTap: () => Navigator.pushNamed(
                     context, ProductDetailScreen.routeName,
-                    arguments: value.id),
+                    arguments: product.id),
                 child: Image.network(
-                  value.imageUrl,
+                  product.imageUrl,
                   fit: BoxFit.contain,
                 )),
           ),
            );
-              }        );
-        }
-}
+              }               }
+
