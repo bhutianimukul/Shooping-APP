@@ -24,10 +24,18 @@ class Cart with ChangeNotifier {
   }
  double getSum(){
    double sum=0.0;
-   for(int i=0;i<items.length;i++){
-     sum+=items[i].price*items[i].quantity;
-   }
+   items.forEach((key, cartItem) { 
+     sum+=cartItem.price*cartItem.quantity;
+   });
    return sum;
+ }
+ void removeItem(String id){
+   items.remove(id);
+   notifyListeners();
+ }
+ void clearCart(){
+   items={};
+   notifyListeners();
  }
 
   void addToCart(String productid,  double price, String title) {

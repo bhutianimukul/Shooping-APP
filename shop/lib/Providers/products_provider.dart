@@ -8,14 +8,14 @@ List<Product> _items=[Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
-      price: 29.99,
+      price: 200,
       imageUrl: 'https://static.iplt20.com/players/210/164.png',
     ),
     Product(
       id: 'p2',
       title: 'headphone',
       description: 'Wireless headphones',
-      price: 25000,
+      price: 2000,
       imageUrl:
           'https://media.croma.com/image/upload/f_auto,q_auto,d_Croma%20Assets:no-product-image.jpg,h_260,w_260/v1605129119/Croma%20Assets/Entertainment/Headphones%20and%20Earphones/Images/8944816816158.png',
     ),
