@@ -22,6 +22,13 @@ class Cart with ChangeNotifier {
   int get getlength{
    return items==null ?   0 : items.length; 
   }
+ double getSum(){
+   double sum=0.0;
+   for(int i=0;i<items.length;i++){
+     sum+=items[i].price*items[i].quantity;
+   }
+   return sum;
+ }
 
   void addToCart(String productid,  double price, String title) {
     if (items.containsKey(productid)) {
