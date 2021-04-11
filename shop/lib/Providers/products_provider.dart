@@ -2,9 +2,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:shop/Providers/product.dart';
 
-class Products with ChangeNotifier{
-
-List<Product> _items=[Product(
+class Products with ChangeNotifier {
+  List<Product> _items = [
+    Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
@@ -27,23 +27,21 @@ List<Product> _items=[Product(
     //   imageUrl:
     //       'https://lh3.googleusercontent.com/proxy/eBc5FuwRkHZWFoFTJnS2HNGZkGjsVRd1Tj8e1l4crPCPDw9GYPKVT7lnrG8-SpnQSnFB8YivQZHePmFt6sjdhthwTvJ0DBbTesFtLK95VeyWtyQl9CBU1GsrapiEBz0Y6582T0g',
     // ),
-    ];
-    List<Product> get favList{
-return [..._items.where((element) => element.isFavorite==true).toList()];
+  ];
+  List<Product> get favList {
+    return [..._items.where((element) => element.isFavorite == true).toList()];
+  }
 
-    }
-List<Product> get items{
- 
-  return [..._items];
-}
-Product  findById(String id){
-  return  _items.firstWhere((element) => element.id == id);
-}
-void addProductListener(){
-  //_items.add();
-  notifyListeners();
-}
+  List<Product> get items {
+    return [..._items];
+  }
 
+  Product findById(String id) {
+    return _items.firstWhere((element) => element.id == id);
+  }
 
-
+  void addProductListener() {
+    //_items.add();
+    notifyListeners();
+  }
 }

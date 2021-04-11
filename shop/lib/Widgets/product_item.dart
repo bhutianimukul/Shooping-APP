@@ -11,41 +11,46 @@ class ProductItem extends StatelessWidget {
     final providerData = Provider.of<Cart>(context, listen: false);
     final product = Provider.of<Product>(context);
 
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: GridTile(
-            footer: GridTileBar(
-              trailing: IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  providerData.addToCart(
-                      product.id, product.price, product.title);
-                },
-              ),
-              leading: IconButton(
-                icon: Icon(product.isFavorite == false
-                    ? Icons.favorite_outline_outlined
-                    : Icons.favorite),
-                onPressed: () {
-                  product.toggleFavorite();
-                },
-              ),
-              backgroundColor: Colors.white60,
-              title: Text(
-                product.title,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.body1,
-              ),
-            ),
-            child: InkWell(
-                onTap: () => Navigator.pushNamed(
-                    context, ProductDetailScreen.routeName,
-                    arguments: product.id),
-                child: Image.network(
-                  product.imageUrl,
-                  fit: BoxFit.contain,
-                )),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: GridTile(
+        footer: GridTileBar(
+          trailing: IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              providerData.addToCart(product.id, product.price, product.title);
+     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Added to Cart"),
+      duration: Duration(seconds: 2),
+      action: SnackBarAction(label: "Undo", onPressed: (){
+        providerData.removeSingleItem(product.id);
+      }),));
+            }
           ),
-           );
-              }               }
-
+          leading: IconButton(
+            icon: Icon(product.isFavorite == false
+                ? Icons.favorite_outline_outlined
+                : Icons.favorite),
+            onPressed: () {
+              product.toggleFavorite();
+            },
+          ),
+          backgroundColor: Colors.white60,
+          title: Text(
+            product.title,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.body1,
+          ),
+        ),
+        child: InkWell(
+            onTap: () => Navigator.pushNamed(
+                context, ProductDetailScreen.routeName,
+                arguments: product.id),
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.contain,
+            )),
+      ),
+    );
+  }
+}

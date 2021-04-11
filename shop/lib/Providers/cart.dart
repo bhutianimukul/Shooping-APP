@@ -15,30 +15,44 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem> items={};
+  Map<String, CartItem> items = {};
   Map<String, CartItem> get cart {
     return {...items};
   }
-  int get getlength{
-   return items==null ?   0 : items.length; 
-  }
- double getSum(){
-   double sum=0.0;
-   items.forEach((key, cartItem) { 
-     sum+=cartItem.price*cartItem.quantity;
-   });
-   return sum;
- }
- void removeItem(String id){
-   items.remove(id);
-   notifyListeners();
- }
- void clearCart(){
-   items={};
-   notifyListeners();
- }
 
-  void addToCart(String productid,  double price, String title) {
+  int get getlength {
+    return items == null ? 0 : items.length;
+  }
+
+  double getSum() {
+    double sum = 0.0;
+    items.forEach((key, cartItem) {
+      sum += cartItem.price * cartItem.quantity;
+    });
+    return sum;
+  }
+
+  void removeItem(String id) {
+    items.remove(id);
+    notifyListeners();
+  }
+
+  void clearCart() {
+    items = {};
+    notifyListeners();
+  }
+  void removeSingleItem(id){
+    if(!items.containsKey(id)) return ;
+    else if(items[id].quantity==1){
+      items.removeWhere((key, value) => key==id);
+    }else{
+      items.update(id, (value) => CartItem(id: id, quantity: value.quantity-1, price:value.price, title: value.title));
+    }
+    notifyListeners();
+
+  }
+
+  void addToCart(String productid, double price, String title) {
     if (items.containsKey(productid)) {
       items.update(
           productid,

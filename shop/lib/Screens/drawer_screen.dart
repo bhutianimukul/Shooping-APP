@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/Screens/user_products_screen.dart';
 
 import 'order_screen.dart';
 
@@ -35,6 +36,19 @@ class DrawerScreen extends StatelessWidget {
               title: Text("Orders"),
               leading: CircleAvatar(
                 child: Icon(Icons.history),
+              ),
+            ),
+          ),
+           Divider(),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: ListTile(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, UserProductsScreen.routeName);
+              },
+              title: Text("Manage Products"),
+              leading: CircleAvatar(
+                child: Icon(Icons.edit),
               ),
             ),
           )
