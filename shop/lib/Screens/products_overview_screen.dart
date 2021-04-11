@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/Providers/cart.dart';
+import 'package:shop/Screens/drawer_screen.dart';
 import 'package:shop/Widgets/badge.dart';
 
 import 'package:shop/Widgets/products_grid.dart';
@@ -22,7 +23,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
+      drawer: DrawerScreen(),
       appBar: AppBar(
         title: Text(
           "Shop Now",
@@ -48,19 +49,19 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                     PopupMenuItem(
                       child: Text('Show All'),
                       value: filterOption.all,
-                      
                     ),
                   ]),
           Consumer<Cart>(
-            builder: (context, cart,ch) => Badge(
-              child: ch ,
+            builder: (context, cart, ch) => Badge(
+              child: ch,
               color: Colors.black,
-                  value: cart.getlength.toString(),
+              value: cart.getlength.toString(),
             ),
             child: IconButton(
-                  icon: Icon(Icons.shopping_cart), onPressed:(){
-                    Navigator.pushNamed(context, CartScreen.routeName);
-                  }),
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {
+                  Navigator.pushNamed(context, CartScreen.routeName);
+                }),
           )
         ],
       ),

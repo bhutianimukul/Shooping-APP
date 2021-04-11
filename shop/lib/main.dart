@@ -7,6 +7,8 @@ import 'package:shop/Screens/cart_screen.dart';
 import 'package:shop/Screens/product_detail_screen.dart';
 import 'package:shop/Screens/products_overview_screen.dart';
 
+import 'Screens/order_screen.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -15,38 +17,47 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_)=> Orders(),
+          create: (_) => Orders(),
         ),
         ChangeNotifierProvider(
-        create: (_)=> Products(),),
-        ChangeNotifierProvider(create: (_)=>Cart(),),
-      ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          darkTheme: ThemeData(brightness: Brightness.dark, 
-          textTheme: ThemeData.dark().textTheme.copyWith(
-            title: TextStyle(fontFamily: 'PermanentMarker', fontWeight: FontWeight.bold, fontSize: 50),
-            body1: TextStyle(fontFamily: 'PermanentMarker', fontSize: 30,color: Colors.black),
-          )),
-        
-          themeMode: ThemeMode.dark,
-          theme: ThemeData(primaryColor: Colors.red,
-          ),
-          home:  App(),
-          routes: {
-            ProductDetailScreen.routeName : (_)=>ProductDetailScreen(),
-            CartScreen.routeName: (_)=>CartScreen()
-          },
-          
+          create: (_) => Products(),
         ),
-      );
+        ChangeNotifierProvider(
+          create: (_) => Cart(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            textTheme: ThemeData.dark().textTheme.copyWith(
+                  title: TextStyle(
+                      fontFamily: 'PermanentMarker',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 50),
+                  body1: TextStyle(
+                      fontFamily: 'PermanentMarker',
+                      fontSize: 30,
+                      color: Colors.black),
+                )),
+        themeMode: ThemeMode.dark,
+        theme: ThemeData(
+          primaryColor: Colors.red,
+        ),
+        home: App(),
+        routes: {
+          OrderScreen.routeName: (_) => OrderScreen(),
+          ProductDetailScreen.routeName: (_) => ProductDetailScreen(),
+          CartScreen.routeName: (_) => CartScreen()
+        },
+      ),
+    );
   }
 }
+
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ProductOverviewScreen(
-      
-    );
+    return ProductOverviewScreen();
   }
 }
