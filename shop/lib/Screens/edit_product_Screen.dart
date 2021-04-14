@@ -65,7 +65,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (val == true) {
       formKey.currentState.save();
       final providerData = Provider.of<Products>(context, listen: false);
-      if (editedProduct.id == null) {
+      if (editedProduct.id == "") {
         providerData.addProductListener(editedProduct);
       } else {
         providerData.update(editedProduct.id, editedProduct);

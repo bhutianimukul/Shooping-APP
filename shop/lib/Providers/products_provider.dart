@@ -1,6 +1,9 @@
 // provider centralised data collection
 import 'package:flutter/foundation.dart';
 import 'package:shop/Providers/product.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -41,7 +44,20 @@ class Products with ChangeNotifier {
   }
 
   void addProductListener(Product product) {
-    final productDummy = Product(
+const url='https://shop-app-169a7-default-rtdb.firebaseio.com/Products.json';
+http.post( 
+  Uri.parse(url),
+  body: json.encode({
+    'title':product.title,
+    'description': product.description,
+       
+        'imageUrl': product.imageUrl,
+       'price': product.price,
+       'isFavorite':product.isFavorite,
+    
+  }),
+);    
+        final productDummy = Product(
         description: product.description,
         title: product.title,
         imageUrl: product.imageUrl,
@@ -52,6 +68,11 @@ class Products with ChangeNotifier {
     //_items.add();
     //
     notifyListeners();
+
+
+
+
+
   }
   void update(id, Product newProduct){
     final index=_items.indexWhere((element) => element.id==id);
