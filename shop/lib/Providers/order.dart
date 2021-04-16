@@ -27,17 +27,20 @@ class Orders with ChangeNotifier {
         final url =
         'https://shop-app-169a7-default-rtdb.firebaseio.com/Orders.json';
 final response= await http.get(Uri.parse(url));
-final List<OrderItem>loadedOrder=[];
+ List<OrderItem>loadedOrder=[];
 final extractedData=json.decode(response.body) as Map<String , dynamic>;
+if(extractedData==null) return ; 
 extractedData.forEach((key, orderData) { 
   loadedOrder.add(
     OrderItem(id: key , amount: orderData['total'], 
-    products: (orderData['products'] as List<dynamic>).map((e) => CartItem(id: e['id'], quantity: e['quantity'], price: e['price'], title: e['title'])).toList(),
-    time: orderData['time'])
+    products: (orderData['products'] as List<dynamic>).map((e) => CartItem(id: e['id'].toString(), quantity: e['quantity'], price: e['price'], title: e['title'])).toList(),
+    time: DateTime.parse(orderData['time']))
   );
 }
-//order=loadedOrder;
+
 );
+_order=loadedOrder.reversed;
+notifyListeners();
   }
 
   Future<void> addOrder(List<CartItem> cart, double total) async {
