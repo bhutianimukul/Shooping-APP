@@ -39,7 +39,7 @@ extractedData.forEach((key, orderData) {
 }
 
 );
-_order=loadedOrder.reversed;
+_order=loadedOrder;
 notifyListeners();
   }
 
