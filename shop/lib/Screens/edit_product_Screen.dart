@@ -56,7 +56,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     });
   }
 
-  void saveForm(context) async{
+  void saveForm(context) async {
     FocusScopeNode f = FocusScope.of(context);
     if (!f.hasPrimaryFocus) {
       f.unfocus();
@@ -69,10 +69,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
       final providerData = Provider.of<Products>(context, listen: false);
       if (editedProduct.id == "") {
-      try{
-       await providerData.addProductListener(editedProduct);
-      }catch(_){
-             await showDialog<void>(
+        try {
+          await providerData.addProductListener(editedProduct);
+        } catch (_) {
+          await showDialog<void>(
               context: context,
               builder: (context) => AlertDialog(
                     title: Text("Error Found"),
@@ -85,20 +85,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           child: Text('OK')),
                     ],
                   ));
-      }
-      finally{
-          setState(() {
-            is_loading = false;
-          });
-          Navigator.pop(context);
-      }
+        } 
       } else {
-        providerData.update(editedProduct.id, editedProduct);
-        setState(() {
+        await providerData.update(editedProduct.id, editedProduct);
+       
+      }
+       setState(() {
           is_loading = false;
         });
         Navigator.pop(context);
-      }
     }
   }
 

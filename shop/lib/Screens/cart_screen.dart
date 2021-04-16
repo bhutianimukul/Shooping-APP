@@ -38,14 +38,7 @@ class CartScreen extends StatelessWidget {
             ),
           ),
           Container(
-              child: RaisedButton(
-            onPressed: () {
-              Provider.of<Orders>(context, listen: false)
-                  .addOrder(providerData.items.values.toList(), sum);
-              providerData.clearCart();
-            },
-            child: Text("Order"),
-          )),
+              child: OrderButton(sum: sum, providerData: providerData)),
           SizedBox(
             height: 10,
           ),
@@ -63,5 +56,45 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key key,
+    @required this.sum,
+    @required this.providerData,
+  }) : super(key: key);
+
+  final double sum;
+  final Cart providerData;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var isLoading=false;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      
+            onPressed: (widget.sum<=0|| isLoading )?null: () async {
+              setState(() {
+                              isLoading=true;
+                            });
+    try{
+    await Provider.of<Orders>(context, listen: false)
+        .addOrder(widget.providerData.items.values.toList(), widget.sum);
+       setState(() {
+                              isLoading=false;
+                            });
+    widget.providerData.clearCart();
+    }catch(error){
+
+    }
+            },
+            child: isLoading? CircularProgressIndicator(): Text("Order"),
+          );
   }
 }

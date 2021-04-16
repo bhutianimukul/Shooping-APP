@@ -23,15 +23,20 @@ class UserProductsScreen extends StatelessWidget {
               })
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(8),
-        child: ListView.builder(
-            itemBuilder: (ctx, index) => UserProductItem(
-                  id: providerData.items[index].id,
-                  title: providerData.items[index].title,
-                  imageUrl: providerData.items[index].imageUrl,
-                ),
-            itemCount: providerData.items.length),
+      body: RefreshIndicator(
+        onRefresh: ()async{
+          return await Provider.of<Products>(context).fetchData();
+        },
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: ListView.builder(
+              itemBuilder: (ctx, index) => UserProductItem(
+                    id: providerData.items[index].id,
+                    title: providerData.items[index].title,
+                    imageUrl: providerData.items[index].imageUrl,
+                  ),
+              itemCount: providerData.items.length),
+        ),
       ),
     );
   }

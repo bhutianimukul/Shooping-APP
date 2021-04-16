@@ -8,9 +8,11 @@ class UserProductItem extends StatelessWidget {
   final imageUrl;
   final String id;
 
+
   const UserProductItem({this.id, this.title, this.imageUrl});
   @override
   Widget build(BuildContext context) {
+     final  dummy=Scaffold.of(context);
     return ListTile(
       title: Text(title),
       leading: CircleAvatar(
@@ -28,10 +30,15 @@ class UserProductItem extends StatelessWidget {
                 }),
             IconButton(
                 icon: Icon(Icons.delete),
-                onPressed: () {
+                onPressed: () async{
                   final providerData =
                       Provider.of<Products>(context, listen: false);
-                  providerData.deleteProduct(id);
+                 
+                 try{
+                  await providerData.deleteProduct(id);
+                 }catch(error){
+dummy.showSnackBar(SnackBar(content: Text('Unable to delete' ), duration: Duration(seconds: 2),));
+                 }
                 }),
           ],
         ),
