@@ -6,8 +6,10 @@ import 'package:shop/Providers/product.dart';
 import 'package:shop/Screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+      final scaffold=Scaffold.of(context);
     final providerData = Provider.of<Cart>(context, listen: false);
     final product = Provider.of<Product>(context);
 
@@ -31,8 +33,14 @@ class ProductItem extends StatelessWidget {
             icon: Icon(product.isFavorite == false
                 ? Icons.favorite_outline_outlined
                 : Icons.favorite),
-            onPressed: () {
-              product.toggleFavorite();
+            onPressed: ()async {
+try{
+
+            await  product.toggleFavorite();
+        
+}catch(error){
+scaffold.showSnackBar(SnackBar(content: Text('error in Favorites'), duration: Duration(seconds: 1),));
+}
             },
           ),
           backgroundColor: Colors.white60,

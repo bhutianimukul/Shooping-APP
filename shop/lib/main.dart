@@ -9,6 +9,8 @@ import 'package:shop/Screens/product_detail_screen.dart';
 import 'package:shop/Screens/products_overview_screen.dart';
 import 'package:shop/Screens/user_products_screen.dart';
 
+import 'Providers/auth.dart';
+import 'Screens/auth_screen.dart';
 import 'Screens/order_screen.dart';
 
 void main() => runApp(MyApp());
@@ -18,6 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_)=>  Auth(),),
         ChangeNotifierProvider(
           create: (_) => Orders(),
         ),
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
           create: (_) => Cart(),
         ),
       ],
-      child: MaterialApp(
+      child: Consumer<Auth>(builder: ( context, auth,child )=> MaterialApp(
         debugShowCheckedModeBanner: false,
         darkTheme: ThemeData(
             brightness: Brightness.dark,
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.red,
         ),
-        home: App(),
+        home: auth.isAuth? ProductOverviewScreen():AuthScreen(),
         routes: {
           EditProductScreen.routeName: (_)=>EditProductScreen(),
           UserProductsScreen.routeName: (_)=>UserProductsScreen(),
@@ -54,14 +57,8 @@ class MyApp extends StatelessWidget {
           ProductDetailScreen.routeName: (_) => ProductDetailScreen(),
           CartScreen.routeName: (_) => CartScreen()
         },
-      ),
+      ),) ,
+     
     );
-  }
-}
-
-class App extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ProductOverviewScreen();
   }
 }

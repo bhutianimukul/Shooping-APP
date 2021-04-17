@@ -80,7 +80,7 @@ class Products with ChangeNotifier {
         'https://shop-app-169a7-default-rtdb.firebaseio.com/Products.json';
     final response = await http.get(Uri.parse(url));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    final List<Product>loadedProducts = [];
+    final List<Product> loadedProducts = [];
     extractedData.forEach((id, product) {
       loadedProducts.insert(
           0,
@@ -98,45 +98,39 @@ class Products with ChangeNotifier {
 
   Future<void> update(id, Product newProduct) async {
     final index = _items.indexWhere((element) => element.id == id);
-    
+
     if (index >= 0) {
-      final  url =
-        'https://shop-app-169a7-default-rtdb.firebaseio.com/Products/$id.json';
-       await  http.patch(Uri.parse(url),
-       body: json.encode(
-         {
-                     'title': newProduct.title,
-          'description': newProduct.description,
-          'imageUrl': newProduct.imageUrl,
-          'price': newProduct.price,
-          'isFavorite': newProduct.isFavorite,
-         }
-       )
-        );
+      final url =
+          'https://shop-app-169a7-default-rtdb.firebaseio.com/Products/$id.json';
+      await http.patch(Uri.parse(url),
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price,
+            'isFavorite': newProduct.isFavorite,
+          }));
       _items[index] = newProduct;
     }
     notifyListeners();
   }
 
   Future<void> deleteProduct(id) async {
-     final  url =
+    final url =
         'https://shop-app-169a7-default-rtdb.firebaseio.com/Products/$id.json';
-        int index=_items.indexWhere((element) => element.id==id);
-        var removedProduct=_items[index];
-        _items.removeAt(index);
-         _items.removeWhere((element) => element.id == id);
+    int index = _items.indexWhere((element) => element.id == id);
+    var removedProduct = _items[index];
+    _items.removeAt(index);
+    _items.removeWhere((element) => element.id == id);
     notifyListeners();
-      final value=await  http.delete(Uri.parse(url));
-         if(value.statusCode>=400){
-               _items.insert(index, removedProduct);
-               notifyListeners();
-           throw HttpException('Unable To Delete');
-         }
-         removedProduct=null;
-           
-       //.catchError((error){
-     
-       
-   
+    final value = await http.delete(Uri.parse(url));
+    if (value.statusCode >= 400) {
+      _items.insert(index, removedProduct);
+      notifyListeners();
+      throw HttpException('Unable To Delete');
+    }
+    removedProduct = null;
+
+    //.catchError((error){
   }
 }
