@@ -31,6 +31,12 @@ class Products with ChangeNotifier {
     // //       'https://lh3.googleusercontent.com/proxy/eBc5FuwRkHZWFoFTJnS2HNGZkGjsVRd1Tj8e1l4crPCPDw9GYPKVT7lnrG8-SpnQSnFB8YivQZHePmFt6sjdhthwTvJ0DBbTesFtLK95VeyWtyQl9CBU1GsrapiEBz0Y6582T0g',
     // // ),
   ];
+  String token, userId;
+  void updateToken(String token, userId) {
+    this.token = token;
+    this.userId = userId;
+  }
+
   List<Product> get favList {
     return [..._items.where((element) => element.isFavorite == true).toList()];
   }
@@ -44,8 +50,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProductListener(Product product) async {
-    const url =
-        'https://shop-app-169a7-default-rtdb.firebaseio.com/Products.json';
+    final url =
+        'https://shop-app-169a7-default-rtdb.firebaseio.com/Products.json?auth=$token';
     try {
       final value = await http.post(
         Uri.parse(url),
@@ -54,7 +60,6 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
       final productDummy = Product(
@@ -76,12 +81,20 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchData() async {
-    const url =
-        'https://shop-app-169a7-default-rtdb.firebaseio.com/Products.json';
+    final url =
+        'https://shop-app-169a7-default-rtdb.firebaseio.com/Products.json?auth=$token';
     final response = await http.get(Uri.parse(url));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    if (extractedData == null) return;
+    final favUrl =
+        'https://shop-app-169a7-default-rtdb.firebaseio.com/Favorites/$userId.json?auth=$token';
+    final favResponse = await http.get(Uri.parse(favUrl));
+    final Map<String, dynamic> valueGot =
+        json.decode(favResponse.body) as Map<String, dynamic>;
+
     final List<Product> loadedProducts = [];
     extractedData.forEach((id, product) {
+      var mapFinal = valueGot==null?{}: valueGot[id];
       loadedProducts.insert(
           0,
           Product(
@@ -90,7 +103,9 @@ class Products with ChangeNotifier {
               imageUrl: product['imageUrl'],
               price: product['price'],
               title: product['title'],
-              isFavorite: product['isFavorite']));
+              isFavorite: mapFinal==null?false:mapFinal['isFavorite']==null ? false :mapFinal['isFavorite']??false
+              )
+              );
       _items = loadedProducts;
       notifyListeners();
     });
@@ -101,14 +116,13 @@ class Products with ChangeNotifier {
 
     if (index >= 0) {
       final url =
-          'https://shop-app-169a7-default-rtdb.firebaseio.com/Products/$id.json';
+          'https://shop-app-169a7-default-rtdb.firebaseio.com/Products/$id.json?auth=$token';
       await http.patch(Uri.parse(url),
           body: json.encode({
             'title': newProduct.title,
             'description': newProduct.description,
             'imageUrl': newProduct.imageUrl,
             'price': newProduct.price,
-            'isFavorite': newProduct.isFavorite,
           }));
       _items[index] = newProduct;
     }
@@ -117,7 +131,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(id) async {
     final url =
-        'https://shop-app-169a7-default-rtdb.firebaseio.com/Products/$id.json';
+        'https://shop-app-169a7-default-rtdb.firebaseio.com/Products/$id.json?auth=$token';
     int index = _items.indexWhere((element) => element.id == id);
     var removedProduct = _items[index];
     _items.removeAt(index);

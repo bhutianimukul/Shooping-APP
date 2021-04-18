@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/Providers/auth.dart';
 import 'package:shop/Screens/user_products_screen.dart';
 
 import 'order_screen.dart';
@@ -49,6 +51,20 @@ class DrawerScreen extends StatelessWidget {
               title: Text("Manage Products"),
               leading: CircleAvatar(
                 child: Icon(Icons.edit),
+              ),
+            ),
+          ),
+          Divider(),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: ListTile(
+              onTap: () {
+                Navigator.of(context).pop();
+             Provider.of<Auth>(context, listen :false).logOut();
+              },
+              title: Text("LOG OUT"),
+              leading: CircleAvatar(
+                child: Icon(Icons.logout),
               ),
             ),
           )

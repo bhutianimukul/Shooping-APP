@@ -1,6 +1,7 @@
 // widget to show the  grid tile
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/Providers/auth.dart';
 import 'package:shop/Providers/cart.dart';
 import 'package:shop/Providers/product.dart';
 import 'package:shop/Screens/product_detail_screen.dart';
@@ -12,6 +13,8 @@ class ProductItem extends StatelessWidget {
       final scaffold=Scaffold.of(context);
     final providerData = Provider.of<Cart>(context, listen: false);
     final product = Provider.of<Product>(context);
+     final auth = Provider.of<Auth>(context ,listen:false );
+     
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
@@ -36,7 +39,7 @@ class ProductItem extends StatelessWidget {
             onPressed: ()async {
 try{
 
-            await  product.toggleFavorite();
+            await  product.toggleFavorite(auth.token,auth.userId);
         
 }catch(error){
 scaffold.showSnackBar(SnackBar(content: Text('error in Favorites'), duration: Duration(seconds: 1),));

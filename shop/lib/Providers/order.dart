@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/Widgets/order_item.dart';
 import 'dart:convert';
 import 'cart.dart';
 
@@ -19,13 +18,19 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
+  String token;
+  String userId;
+void getToken(String token, userId){
+  this.userId=userId;
+this.token=token;
+}
   List<OrderItem> _order = [];
   List<OrderItem> get order {
     return [..._order];
   }
   Future<void> fetchorderData() async{
         final url =
-        'https://shop-app-169a7-default-rtdb.firebaseio.com/Orders.json';
+        'https://shop-app-169a7-default-rtdb.firebaseio.com/Orders/$userId.json?auth=$token';
 final response= await http.get(Uri.parse(url));
  List<OrderItem>loadedOrder=[];
 final extractedData=json.decode(response.body) as Map<String , dynamic>;
@@ -46,7 +51,7 @@ notifyListeners();
   Future<void> addOrder(List<CartItem> cart, double total) async {
     final time = DateTime.now();
     final url =
-        'https://shop-app-169a7-default-rtdb.firebaseio.com/Orders.json';
+        'https://shop-app-169a7-default-rtdb.firebaseio.com/Orders/$userId.json?auth=$token';
         try{
     final response = await http.post(Uri.parse(url),
         body: json.encode({

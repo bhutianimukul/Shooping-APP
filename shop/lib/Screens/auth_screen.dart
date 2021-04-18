@@ -8,6 +8,7 @@ import 'package:shop/Providers/auth.dart';
 enum AuthMode { Signup, Login }
 
 class AuthScreen extends StatelessWidget {
+  
   static const routeName = '/auth';
 
   @override
@@ -103,15 +104,23 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   var errorMessage;
   final _passwordController = TextEditingController();
-void showDialogScreen(message){
-  showDialog(context: context, builder: (ctx)=>AlertDialog(
-    content: Text(message,style: TextStyle(fontFamily: '' ,fontSize: 15 , color: Colors.white)),
-    title: Text('ERROR OCCURED', style: TextStyle(fontFamily: '' ,fontSize: 25 , color: Colors.white),),
-    actions: [
-      TextButton(onPressed: (){Navigator.pop(ctx);}, child: Center(child: Text('ok', style: TextStyle(fontFamily: '' ,fontSize: 25 ))))
-    ],
-  ));
-}
+  void showDialogScreen(message) {
+   showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+            title: Text('An Error Occurred!'),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
+    );  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
@@ -121,37 +130,35 @@ void showDialogScreen(message){
     setState(() {
       _isLoading = true;
     });
-    try{
-    if (_authMode == AuthMode.Login) {
-      await Provider.of<Auth>(context, listen: false)
-          .signIn(_authData['email'], _authData['password']);
-      // Log user in
-    } else {
-      await Provider.of<Auth>(context, listen: false)
-          .signUp(_authData['email'], _authData['password']);
-    }
-    }on HttpException catch(error){
-      errorMessage="Auth Failed";
-      if(error.toString().contains('EMAIL_EXISTS')){
-        errorMessage='User already exist! Pls LogIn Instead';
-      }else if(error.toString().contains('INVALID_EMAIL')){
-          errorMessage='Wrong Email Address';
+    try {
+      if (_authMode == AuthMode.Login) {
+        await Provider.of<Auth>(context, listen: false)
+            .signIn(_authData['email'], _authData['password']);
+        // Log user in
+      } else {
+        await Provider.of<Auth>(context, listen: false)
+            .signUp(_authData['email'], _authData['password']);
       }
-      else if(error.toString().contains('INVALID_PASSWORD')){
-          errorMessage='Wrong Password';
+    } on HttpException catch (error) {
+      errorMessage = "Auth Failed";
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'User already exist! Pls LogIn Instead';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'Wrong Email Address';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Wrong Password';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Weak Password';
       }
-      else if(error.toString().contains('WEAK_PASSWORD')){
-          errorMessage='Weak Password';
-      }
-showDialogScreen(errorMessage);
+      showDialogScreen(errorMessage);
+    } catch (error) {
+      print(error);
+      errorMessage = 'Authentication Error!! Please Try Again';
+      showDialogScreen(errorMessage);
     }
-    catch(error){
-errorMessage='Authentication Error!! Please Try Again';
-showDialogScreen(errorMessage);
-    }
-    setState(() {
-      _isLoading = false;
-    });
+    // setState(() {
+    //   _isLoading = false;
+    // });
   }
 
   void _switchAuthMode() {

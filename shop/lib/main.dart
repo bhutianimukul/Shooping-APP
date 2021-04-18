@@ -7,6 +7,7 @@ import 'package:shop/Screens/cart_screen.dart';
 import 'package:shop/Screens/edit_product_Screen.dart';
 import 'package:shop/Screens/product_detail_screen.dart';
 import 'package:shop/Screens/products_overview_screen.dart';
+import 'package:shop/Screens/splash_screen.dart';
 import 'package:shop/Screens/user_products_screen.dart';
 
 import 'Providers/auth.dart';
@@ -20,13 +21,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_)=>  Auth(),),
-        ChangeNotifierProvider(
+        ChangeNotifierProvider.value(value:  Auth(),),
+         ChangeNotifierProxyProvider<Auth, Products>(
+         create: (_)=>Products(),
+          update: (_, auth , product) => product..updateToken(auth.token,auth.userId)
+          
+        ),
+        ChangeNotifierProxyProvider<Auth,Orders>(
           create: (_) => Orders(),
+          update: (_, auth , order)=>order..getToken(auth.token,auth.userId),
         ),
-        ChangeNotifierProvider(
-          create: (_) => Products(),
-        ),
+       
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
@@ -49,7 +54,19 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.red,
         ),
-        home: auth.isAuth? ProductOverviewScreen():AuthScreen(),
+      home: auth.isAuth
+                  ? ProductOverviewScreen()
+                  : FutureBuilder(
+                      future: auth.autoLogin(),
+                      builder: (context, authResultSnapshot) {
+                   
+
+                       return   authResultSnapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? SplashScreen()
+                              :
+                   AuthScreen();
+                      }),
         routes: {
           EditProductScreen.routeName: (_)=>EditProductScreen(),
           UserProductsScreen.routeName: (_)=>UserProductsScreen(),
